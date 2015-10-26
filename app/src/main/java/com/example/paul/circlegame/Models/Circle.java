@@ -1,12 +1,14 @@
 package com.example.paul.circlegame.Models;
 
+import com.example.paul.circlegame.Controllers.AppConstants;
+
 /**
  * Created by Paul on 20/10/2015.
  * Represents the moving circle and contains all information related
  */
 public class Circle {
     // Radius of the circle
-    public static final int RADIUS = 50;
+    public static final int RADIUS = 60;
     // Allowed coordinate range (position on plane)
     private static int MULTIPLICAND_WIDTH;
     private static int MULTIPLICAND_HEIGHT;
@@ -20,8 +22,8 @@ public class Circle {
     public Circle(){
         _x0 = AppConstants.SCREEN_WIDTH / 2;
         _y0 = AppConstants.SCREEN_HEIGHT / 2;
-        MULTIPLICAND_WIDTH = AppConstants.SCREEN_WIDTH / 2 - RADIUS * 2;
-        MULTIPLICAND_HEIGHT = AppConstants.SCREEN_HEIGHT / 2 - RADIUS * 2;
+        MULTIPLICAND_WIDTH = AppConstants.SCREEN_WIDTH / 2 - RADIUS / 2;
+        MULTIPLICAND_HEIGHT = AppConstants.SCREEN_HEIGHT / 2 - RADIUS / 2;
         _xt = 0;
         _yt = 10000;
     }
@@ -31,11 +33,12 @@ public class Circle {
      * @param circleSpeed
      */
     public void Move(int circleSpeed){
+        double speed = circleSpeed * 0.001;
         _x = (float)(_x0 + noise(_xt, 0, 0) * MULTIPLICAND_WIDTH);
         _y = (float)(_y0 + noise(_yt, 0, 0) * MULTIPLICAND_HEIGHT);
 
-        _xt += 0.01;
-        _yt += 0.01;
+        _xt += speed;
+        _yt += speed;
 
     }
 
@@ -46,9 +49,11 @@ public class Circle {
      * @return
      */
     public boolean Includes(float x, float y){
-        float distance = (float) (Math.pow((Math.pow((_x - x), 2) + Math.pow((_y - y), 2)), 0.5));
-        if (distance < RADIUS){
-            return true;
+        if (x + y > 0){
+            float distance = (float) (Math.sqrt((Math.pow((_x - x), 2) + Math.pow((_y - y), 2))));
+            if (distance < RADIUS){
+                return true;
+            }
         }
         return false;
     }

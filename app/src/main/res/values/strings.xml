@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CircleGame</string>
+    <color name="black">#000000</color>
 </resources>

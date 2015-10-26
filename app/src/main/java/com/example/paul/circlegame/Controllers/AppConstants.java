@@ -1,11 +1,9 @@
-package com.example.paul.circlegame.Models;
+package com.example.paul.circlegame.Controllers;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
-
-import com.example.paul.circlegame.Controllers.GameEngine;
 
 /**
  * Created by Paul on 20/10/2015.
@@ -21,17 +19,18 @@ public class AppConstants {
      * Initialization of the application constants
      */
     public static void Initialization(Context context){
-        SetScrrenSize(context);
+        SetScrenSize(context);
         _engine = new GameEngine();
     }
 
-    private static void SetScrrenSize(Context context){
+    private static void SetScrenSize(Context context){
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
+
 
         AppConstants.SCREEN_WIDTH = width;
         AppConstants.SCREEN_HEIGHT = height;

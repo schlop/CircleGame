@@ -1,84 +1,71 @@
 package com.example.paul.circlegame.Views;
 
-import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.view.SurfaceHolder;
-
-import com.example.paul.circlegame.Models.AppConstants;
 
 /**
  * Created by Paul on 20/10/2015.
  */
 public class DisplayThread extends Thread {
 
-    SurfaceHolder _surfaceHolder;
-    Paint _backgroundPaint;
+    static final long FPS = 30;
+    private int measuredFps = 0;
+    private long startFps;
+    private GameView view;
+    private boolean running = false;
+    private boolean alreadyStarted = false;
 
-    long _startTime;
-    long _wakeUpTime;
-
-    boolean _isOnRun;
-
-    public DisplayThread(SurfaceHolder surfaceHolder, Context context) {
-        _surfaceHolder = surfaceHolder;
-
-        //black painter below to clear the screen before the game is rendered
-        _backgroundPaint = new Paint();
-        _backgroundPaint.setARGB(255, 0, 0, 0);
-        _isOnRun = true;
+    public DisplayThread(GameView view) {
+        this.view = view;
     }
 
+    public void setRunning(boolean run) {
+        running = run;
+    }
 
-    /**
-     * This is the main nucleus of our program.
-     * From here will be called all the method that are associated with the display in GameEngine object
-     */
+    public boolean getRunning(){
+        return running;
+    }
+
+    public void setAlreadyStarted(boolean alreadyStarted){
+        this.alreadyStarted = alreadyStarted;
+    }
+
+    public boolean isAlreadyStarted() {
+        return alreadyStarted;
+    }
+
     @Override
     public void run() {
-        //Safe current time first to calculate sleep time later
-        _startTime = System.currentTimeMillis();
-        _wakeUpTime = _startTime + 40;
-        //Looping until the boolean is false
-        while (_isOnRun) {
-            //Updates the game objects buisiness logic
-            AppConstants.GetEngine().Update();
-
-            //locking the canvas
-            Canvas canvas = _surfaceHolder.lockCanvas(null);
-            if (canvas != null) {
-                //Clears the screen with black paint and draws object on the canvas
-                synchronized (_surfaceHolder) {
-
-                    canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), _backgroundPaint);
-                    AppConstants.GetEngine().Draw(canvas);
-                }
-
-                    //unlocking the Canvas
-                    _surfaceHolder.unlockCanvasAndPost(canvas);
-
+        long ticksPS = 1000 / FPS;
+        long startTime;
+        long sleepTime;
+        startFps = System.currentTimeMillis();
+        while (running) {
+            Canvas c = null;
+            startTime = System.currentTimeMillis();
+            if (startTime - startFps > 999){
+                startFps = System.currentTimeMillis();
+                view.setFps(measuredFps);
+                measuredFps = 0;
             }
-
-            //delay time
+            measuredFps++;
             try {
-                Thread.sleep(_wakeUpTime - _startTime);
-            } catch (InterruptedException ex) {
-                //TODO: Log
+                c = view.getHolder().lockCanvas();
+                synchronized (view.getHolder()) {
+                    view.onDraw(c);
+                }
+            } finally {
+                if (c != null) {
+                    view.getHolder().unlockCanvasAndPost(c);
+                }
             }
+            sleepTime = ticksPS-(System.currentTimeMillis() - startTime);
+            try {
+                if (sleepTime > 0)
+                    sleep(sleepTime);
+                else
+                    sleep(10);
+            } catch (Exception e) {}
         }
-    }
-
-    /**
-     * @return whether the thread is running
-     */
-    public boolean IsRunning() {
-        return _isOnRun;
-    }
-
-    /**
-     * Sets the thread state, false = stoped, true = running
-     */
-    public void SetIsRunning(boolean state) {
-        _isOnRun = state;
     }
 }

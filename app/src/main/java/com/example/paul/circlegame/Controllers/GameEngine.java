@@ -12,7 +12,7 @@ import com.example.paul.circlegame.Models.Circle;
 public class GameEngine {
 
     /*MEMBERS*/
-    static final int CIRCLE_SPEED = 1;
+    static final int CIRCLE_SPEED = 12;
     static Circle _circle;
     Paint _paint;
     static final Object _sync = new Object();
