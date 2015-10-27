@@ -1,66 +1,64 @@
 package com.example.paul.circlegame.Controllers;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
 /**
  * Created by Paul on 20/10/2015.
- * Contains all constants and launches the game engine after startup
+ * Contains all constants
  */
 public class AppConstants {
 
-    static GameEngine _engine;
+    //properties of the device screen
+    public static int SCREEN_WIDTH;
+    public static int SCREEN_HEIGHT;
+    public static int DENSITY;
 
-    public static int SCREEN_WIDTH, SCREEN_HEIGHT;
+    //radius of the displayed circle
+    public static final float RADIUS = 0.3F;
+
+    //speed the displayed circle moves with
+    public static final int SPEED = 10;
+
+    //period of time circle is displayed
+    public static final long DURATION_BLOCK = 10 * 1000;
+
+    //Pictures drawn per second
+    public static final int FPS = 30;
+
+    //Colors of touched/notTouched objects
+    public static final int TOUCH_COLOR = Color.GREEN;
+    public static final int UNTOUCH_COLOR = Color.RED;
 
     /**
-     * Initialization of the application constants
+     * Set the screen properties
      */
-    public static void Initialization(Context context){
-        SetScrenSize(context);
-        _engine = new GameEngine();
+    public static void initialization(Context context){
+        setScreenSize(context);
+        setScreenDensity(context);
     }
 
-    private static void SetScrenSize(Context context){
+    private static void setScreenSize(Context context){
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
-
-
-        AppConstants.SCREEN_WIDTH = width;
-        AppConstants.SCREEN_HEIGHT = height;
+        SCREEN_WIDTH = height;
+        SCREEN_HEIGHT = width;
     }
 
-    /**
-     * @return GameEngine instance
-     * */
-    public static GameEngine GetEngine()
-    {
-        return _engine;
-    }
-
-    /**
-     * Stops the given thread
-     * @param thread
-     * 			thread to stop
-     * */
-    public static void StopThread(Thread thread)
-    {
-        boolean retry = true;
-        while (retry)
-        {
-            try
-            {
-                thread.join();
-                retry = false;
-            }
-            catch (InterruptedException e) {}
-        }
+    private static void setScreenDensity(Context context){
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        int density = metrics.densityDpi;
+        DENSITY = density;
     }
 
 

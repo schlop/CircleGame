@@ -15,14 +15,14 @@ import com.example.paul.circlegame.Controllers.GameEngine;
  * Contains the DisplayThread to render UI elements on the surfaceHolder plane
  */
 public class GameView extends SurfaceView {
-    Context _context;
     Paint fpsPaint;
     private int fps;
+    GameEngine gameEngine;
     private DisplayThread _displayThread;
 
-    public GameView(Context context, GameEngine gEngine) {
+    public GameView(Context context, GameEngine gameEngine) {
         super(context);
-        _context = context;
+        this.gameEngine = gameEngine;
         InitView();
     }
 
@@ -74,10 +74,10 @@ public class GameView extends SurfaceView {
     @Override
     protected void onDraw(Canvas canvas) {
         if (_displayThread.getRunning()) {
-            AppConstants.GetEngine().Update();
+            gameEngine.update();
             canvas.drawColor(Color.BLACK);
             canvas.drawText(String.valueOf(fps), 20, 20, fpsPaint);
-            AppConstants.GetEngine().Draw(canvas);
+            gameEngine.draw(canvas);
         }
     }
 }

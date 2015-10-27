@@ -2,19 +2,21 @@ package com.example.paul.circlegame.Views;
 
 import android.graphics.Canvas;
 
+import com.example.paul.circlegame.Controllers.AppConstants;
+
 /**
  * Created by Paul on 20/10/2015.
  */
 public class DisplayThread extends Thread {
 
-    static final long FPS = 30;
-    private int measuredFps = 0;
+    private int measuredFps;
     private long startFps;
     private GameView view;
     private boolean running = false;
     private boolean alreadyStarted = false;
 
     public DisplayThread(GameView view) {
+        measuredFps = 0;
         this.view = view;
     }
 
@@ -36,7 +38,7 @@ public class DisplayThread extends Thread {
 
     @Override
     public void run() {
-        long ticksPS = 1000 / FPS;
+        long ticksPS = 1000 / AppConstants.FPS;
         long startTime;
         long sleepTime;
         startFps = System.currentTimeMillis();

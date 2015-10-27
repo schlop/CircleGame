@@ -5,12 +5,10 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MotionEvent;
-import android.view.Surface;
-import android.view.SurfaceView;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.example.paul.circlegame.Models.TimeKeeper;
 import com.example.paul.circlegame.Views.GameView;
 
 import java.util.Timer;
@@ -22,55 +20,62 @@ import java.util.TimerTask;
  */
 public class GameActivity extends Activity {
 
-    GameView view;
+    private GameView view;
+    private GameEngine gameEngine;
+    private TimeKeeper timeKeeper;
 
     @Override
     /**
-     * Creates the surfaceView that is used to display the UI elements
+     * Creates the surfaceView that is used to display the game and sets app to fullscreen
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //sets the activity view as GameView class
-
+        //Enable fullscreen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        AppConstants.Initialization(this);
-        view = new GameView(this, AppConstants.GetEngine());
+        //Create new Timekeeper that keeps track about touch events
+        timeKeeper = new TimeKeeper();
+        //Create new GameEngine object
+        gameEngine = new GameEngine(timeKeeper);
+        //Create new GameView with created GameEngine
+        view = new GameView(this, gameEngine);
         setContentView(view);
+        //End game after a predefined period of time and return to the launch menu
         new Timer().schedule(new TimerTask() {
             public void run() {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         view.stopDisplayThread();
+                        timeKeeper.generateLog();
                         startActivity(new Intent(GameActivity.this, MenuActivity.class));
                     }
                 });
             }
-        }, 300 * 1000);
+        }, AppConstants.DURATION_BLOCK);
 
     }
 
     
     @Override
     /**
-     * Overwrites the onTouchEvent method and calls methods for each user event
+     * Overwrites the onTouchEvent method and calls methods for each touch event
      */
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
         int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
-                OnActionDown(event);
+                onActionDown(event);
                 break;
             }
             case MotionEvent.ACTION_UP: {
-                OnActionUp(event);
+                onActionUp(event);
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
-                OnActionMove(event);
+                onActionMove(event);
                 break;
             }
             default:
@@ -80,23 +85,23 @@ public class GameActivity extends Activity {
     }
 
     /*activates on touch move event*/
-    private void OnActionMove(MotionEvent event) {
+    private void onActionMove(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
-        AppConstants.GetEngine().SetLastTouched(x, y);
+        gameEngine.setTouchPosition(x, y);
     }
 
     /*activates on touch down event*/
-    private void OnActionDown(MotionEvent event) {
+    private void onActionDown(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
-        AppConstants.GetEngine().SetLastTouched(x, y);
+        gameEngine.setTouchPosition(x, y);
     }
 
     /*activates on touch up event*/
-    private void OnActionUp(MotionEvent event) {
+    private void onActionUp(MotionEvent event) {
         //Circle should be never counted as touched if finger is not on screen
-        AppConstants.GetEngine().SetLastTouched(-1, -1);
+        gameEngine.setTouchPosition(-1, -1);
     }
 
 
