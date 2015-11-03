@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.example.paul.circlegame.Controllers.AppConstants;
 import com.example.paul.circlegame.Controllers.GameEngine;
 
 /**
@@ -18,7 +17,7 @@ public class GameView extends SurfaceView {
     Paint fpsPaint;
     private int fps;
     GameEngine gameEngine;
-    private DisplayThread _displayThread;
+    private DisplayThread displayThread;
 
     public GameView(Context context, GameEngine gameEngine) {
         super(context);
@@ -31,7 +30,7 @@ public class GameView extends SurfaceView {
      */
     void InitView() {
         SurfaceHolder holder = getHolder();
-        _displayThread = new DisplayThread(this);
+        displayThread = new DisplayThread(this);
         fpsPaint = new Paint();
         fpsPaint.setColor(Color.WHITE);
         fpsPaint.setTextSize(20);
@@ -46,17 +45,17 @@ public class GameView extends SurfaceView {
 
             @Override
             public void surfaceDestroyed(SurfaceHolder arg0) {
-                _displayThread.setRunning(false);
-                _displayThread.setAlreadyStarted(true);
+                displayThread.setRunning(false);
+                displayThread.setAlreadyStarted(true);
             }
 
             @Override
             public void surfaceCreated(SurfaceHolder arg0) {
                 //Starts the display thread
-                _displayThread.setRunning(true);
+                displayThread.setRunning(true);
                 long time = System.currentTimeMillis();
-                if (!_displayThread.isAlreadyStarted()) {
-                    _displayThread.start();
+                if (!displayThread.isAlreadyStarted()) {
+                    displayThread.start();
                 }
             }
         });
@@ -67,13 +66,13 @@ public class GameView extends SurfaceView {
     }
 
     public void stopDisplayThread() {
-        _displayThread.setRunning(false);
+        displayThread.setRunning(false);
     }
 
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (_displayThread.getRunning()) {
+        if (displayThread.getRunning()) {
             gameEngine.update();
             canvas.drawColor(Color.BLACK);
             canvas.drawText(String.valueOf(fps), 20, 20, fpsPaint);

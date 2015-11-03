@@ -36,7 +36,7 @@ public class AppConstants {
     /**
      * Set the screen properties
      */
-    public static void initialization(Context context){
+    public static void initialize(Context context){
         setScreenSize(context);
         setScreenDensity(context);
     }

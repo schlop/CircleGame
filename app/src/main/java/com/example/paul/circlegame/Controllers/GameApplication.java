@@ -18,7 +18,7 @@ public class GameApplication extends Application {
     {
         super.onCreate();
         //Initialization of the AppConstants class
-        AppConstants.initialization(this.getApplicationContext());
+        AppConstants.initialize(this.getApplicationContext());
 
     }
 }
