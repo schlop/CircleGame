@@ -43,6 +43,7 @@ public class MenuActivity extends Activity {
         mIpPicker.setMinValue(0);
         mIpPicker.setMaxValue(254);
         mIpPicker.setDisplayedValues(ipArray);
+        mIpPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
     }
 
     /**

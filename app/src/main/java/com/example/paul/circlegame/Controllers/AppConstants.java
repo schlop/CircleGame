@@ -35,6 +35,7 @@ public class AppConstants {
 
     //Pictures drawn per second
     public static final int FPS = 30;
+    public static final boolean SHOW_FPS = false;
 
     //Colors of touched/notTouched objects
     public static final int TOUCH_COLOR = Color.GREEN;

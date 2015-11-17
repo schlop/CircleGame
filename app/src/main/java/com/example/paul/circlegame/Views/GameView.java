@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.example.paul.circlegame.Controllers.AppConstants;
 import com.example.paul.circlegame.Controllers.GameEngine;
 
 /**
@@ -75,7 +76,9 @@ public class GameView extends SurfaceView {
         if (displayThread.getRunning()) {
             gameEngine.update();
             canvas.drawColor(Color.BLACK);
-            canvas.drawText(String.valueOf(fps), 20, 20, fpsPaint);
+            if (AppConstants.SHOW_FPS) {
+                canvas.drawText(String.valueOf(fps), 20, 20, fpsPaint);
+            }
             gameEngine.draw(canvas);
         }
     }

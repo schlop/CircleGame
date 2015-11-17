@@ -171,23 +171,25 @@ public class GameActivity extends Activity {
      * Overwrites the onTouchEvent method and calls methods for each touch event
      */
     public boolean onTouchEvent(MotionEvent event) {
-        super.onTouchEvent(event);
-        int action = event.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN: {
-                onActionDown(event);
-                break;
+        if (gameRunning) {
+            super.onTouchEvent(event);
+            int action = event.getAction();
+            switch (action) {
+                case MotionEvent.ACTION_DOWN: {
+                    onActionDown(event);
+                    break;
+                }
+                case MotionEvent.ACTION_UP: {
+                    onActionUp(event);
+                    break;
+                }
+                case MotionEvent.ACTION_MOVE: {
+                    onActionMove(event);
+                    break;
+                }
+                default:
+                    break;
             }
-            case MotionEvent.ACTION_UP: {
-                onActionUp(event);
-                break;
-            }
-            case MotionEvent.ACTION_MOVE: {
-                onActionMove(event);
-                break;
-            }
-            default:
-                break;
         }
         return false;
     }
