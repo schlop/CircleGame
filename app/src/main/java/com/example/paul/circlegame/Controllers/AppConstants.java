@@ -41,8 +41,8 @@ public class AppConstants {
     public static final int TOUCH_COLOR = Color.GREEN;
     public static final int UNTOUCH_COLOR = Color.RED;
 
-    public static String IP_PREFIX = "192.168.1.";
-    public static final String START_MESSAGE = "#START#PT_TRUE";
+    public static String IP_PREFIX = "192.168.178.";
+    public static final String START_MESSAGE = "PT_TRUE";
     public static final String END_MESSAGE = "#END";
 
     /**
@@ -51,7 +51,7 @@ public class AppConstants {
     public static void initialize(Context context){
         setScreenSize(context);
         setScreenDensity(context);
-        setIpPrefix(context);
+        //setIpPrefix(context);
     }
 
     /**

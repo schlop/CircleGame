@@ -48,7 +48,7 @@ public class GameActivity extends Activity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         Bundle extras = getIntent().getExtras();
-        if(extras == null) {
+        if (extras == null) {
             //End game after a predefined period of time and return to the launch menu
             new Timer().schedule(new TimerTask() {
                 public void run() {
@@ -60,8 +60,7 @@ public class GameActivity extends Activity {
                 }
             }, AppConstants.DURATION_BLOCK);
             startGame();
-        }
-        else{
+        } else {
             String ipAddress = extras.getString("IP_ADDRESS");
             mConnectTask = new ConnectTask(ipAddress);
             mConnectTask.execute("");
@@ -81,7 +80,7 @@ public class GameActivity extends Activity {
 
         public ConnectTask(String serverIp) {
             super();
-            this.serverIp = "192.168.178.81";
+            this.serverIp = serverIp;
         }
 
         @Override
@@ -100,9 +99,10 @@ public class GameActivity extends Activity {
                     //this method calls the onProgressUpdate
                     publishProgress(message);
                 }
+
                 //We send the name of our device to the TCP server to make direct communication possible
-                public void statusUpdated(String status){
-                    if (status.contains("Connected")){
+                public void statusUpdated(String status) {
+                    if (status.contains("Connected")) {
                         mTcpClient.sendMessage("PT");
                     }
                 }
@@ -122,12 +122,13 @@ public class GameActivity extends Activity {
 
             //We just react to START and END messages
             final String tcpMsg = values[0];
-            if (tcpMsg.startsWith(AppConstants.START_MESSAGE)){
+            if (tcpMsg.contains(AppConstants.START_MESSAGE)) {
                 startGame();
             }
-            if (tcpMsg.startsWith(AppConstants.END_MESSAGE) && gameRunning){
+            if (tcpMsg.startsWith(AppConstants.END_MESSAGE) && gameRunning) {
                 startPause();
             }
+            mTcpClient.sendMessage("REPLY_TO_SERVER->Primary Task");
         }
     }
 
@@ -135,7 +136,7 @@ public class GameActivity extends Activity {
      * Starts teh game and displays the moving circle
      * Timekeeper is initiated for logging
      */
-    private void startGame(){
+    private void startGame() {
         gameRunning = true;
         //Create new Timekeeper that keeps track about touch events
         timeKeeper = new TimeKeeper();
@@ -150,7 +151,7 @@ public class GameActivity extends Activity {
      * Displays a blank screen and creates the logFile
      * This is called after one block has finished
      */
-    private void startPause(){
+    private void startPause() {
         gameRunning = false;
         view.stopDisplayThread();
         timeKeeper.generateLog();
@@ -160,12 +161,12 @@ public class GameActivity extends Activity {
     /**
      * Returns to the start menu. This is called when the demo finishes
      */
-    private void startMenu(){
+    private void startMenu() {
         view.stopDisplayThread();
         startActivity(new Intent(GameActivity.this, MenuActivity.class));
     }
 
-    
+
     @Override
     /**
      * Overwrites the onTouchEvent method and calls methods for each touch event
